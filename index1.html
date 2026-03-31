@@ -494,14 +494,16 @@
     // 渲染經歷列表
     const experiencesContainer = document.getElementById('experiences-container');
     experiencesData.forEach((item, index) => {
+      // 這裡將原本的 hover: 與 group-hover: 改成 lg:hover: 與 lg:group-hover: 
+      // 確保 CSS 的懸停效果只在電腦版（帶有滑鼠的裝置）觸發，完美避開手機版「點擊後黏住顏色」的臭蟲
       experiencesContainer.innerHTML += `
         <div class="border-b border-gray-200">
-          <button id="btn-accordion-${index}" onclick="toggleAccordion(${index})" class="w-full text-left group py-6 md:py-8 px-6 hover:bg-[#1A1A1A] hover:text-white transition-all duration-500 cursor-pointer interactive-hover flex justify-between items-center">
-            <div id="content-inner-${index}" class="flex flex-col md:flex-row md:items-center gap-2 md:gap-16 transform transition-transform duration-500 group-hover:translate-x-4 flex-1">
-              <span id="date-span-${index}" class="font-light tracking-widest text-gray-400 group-hover:text-gray-300 transition-colors w-24">${item.date}</span>
+          <button id="btn-accordion-${index}" onclick="toggleAccordion(${index})" class="w-full text-left group py-6 md:py-8 px-6 lg:hover:bg-[#1A1A1A] lg:hover:text-white transition-all duration-500 cursor-pointer interactive-hover flex justify-between items-center">
+            <div id="content-inner-${index}" class="flex flex-col md:flex-row md:items-center gap-2 md:gap-16 transform transition-transform duration-500 lg:group-hover:translate-x-4 flex-1">
+              <span id="date-span-${index}" class="font-light tracking-widest text-gray-400 lg:group-hover:text-gray-300 transition-colors w-24">${item.date}</span>
               <h4 class="text-base md:text-lg font-light tracking-wider">${item.title}</h4>
             </div>
-            <div class="text-gray-400 group-hover:text-white transition-transform duration-500 ml-4" id="icon-accordion-${index}">
+            <div class="text-gray-400 lg:group-hover:text-white transition-transform duration-500 ml-4" id="icon-accordion-${index}">
               <!-- 使用內聯 SVG 確保動態生成時能順利載入 -->
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </div>
@@ -676,6 +678,9 @@
         dateSpan.classList.add('text-gray-400');
         icon.classList.remove('text-white');
         icon.classList.add('text-gray-400');
+        
+        // 強制取消焦點，避免手機端瀏覽器保留虛擬懸停狀態 (Sticky Hover)
+        btn.blur();
       } else {
         // 展開：將 max-height 設定為實際內容高度
         content.style.maxHeight = content.scrollHeight + 'px';
