@@ -302,12 +302,12 @@
   </footer>
 
   <!-- 全螢幕細節視窗 (Modal) -->
-  <div id="modal-overlay" class="fixed inset-0 z-[8000] bg-[#F9F9F9] transition-all duration-700 ease-in-out overflow-y-auto opacity-0 translate-y-12 pointer-events-none">
+  <div id="modal-overlay" class="fixed inset-0 z-[8000] bg-[#F9F9F9] transition-all duration-700 ease-in-out overflow-y-auto opacity-0 translate-y-12 pointer-events-none cursor-pointer" onclick="handleModalClick(event)">
     <button onclick="closeModal()" class="fixed top-8 right-8 md:top-12 md:right-12 z-[8010] p-4 bg-white/80 backdrop-blur-md rounded-full interactive-hover hover:bg-black hover:text-white transition-colors border border-gray-200 shadow-sm text-black">
       <i data-lucide="x" stroke-width="1.5" style="width: 24px; height: 24px;"></i>
     </button>
 
-    <div id="modal-content" class="min-h-screen px-6 py-24 md:px-24 2xl:px-48 w-full relative">
+    <div id="modal-content" class="min-h-screen px-6 py-24 md:px-24 2xl:px-48 w-full relative cursor-default">
       <!-- 彈出視窗內容將由 JavaScript 注入 -->
     </div>
   </div>
@@ -459,7 +459,7 @@
       
       // 第一個專案圖片比例較為寬廣
       const imgAspectClass = isFeatured
-        ? "aspect-[4/3] md:aspect-[21/9]"
+        ? ""
         : "aspect-[4/3]";
         
       // 第一個專案標題放大
@@ -467,11 +467,15 @@
         ? "text-2xl md:text-4xl font-medium tracking-wider mb-2 transition-transform duration-300 group-hover:translate-x-2 text-[#1A1A1A]"
         : "text-xl font-medium tracking-wider mb-2 transition-transform duration-300 group-hover:translate-x-2 text-[#1A1A1A]";
 
+      const imgClasses = isFeatured
+        ? "pop-image w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-[1500ms] ease-out bg-gray-200 text-gray-400 text-sm"
+        : "pop-image object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-[1500ms] ease-out bg-gray-200 text-gray-400 text-sm";
+
       projectsContainer.innerHTML += `
         <a href="#" class="${cardClasses}" onclick="openProjectModal(${project.id}); return false;">
           <div class="overflow-hidden mb-6 relative bg-gray-100">
             <div class="parallax-bg w-full ${imgAspectClass} transition-transform duration-700 ease-out will-change-transform scale-110" style="transform: translate3d(0px, 0px, 0) scale(1.05)">
-              <img src="${project.img || TRANSPARENT_PIXEL}" onerror="handleImgError(this)" alt="${project.name}" class="pop-image object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-[1500ms] ease-out bg-gray-200 text-gray-400 text-sm" />
+              <img src="${project.img || TRANSPARENT_PIXEL}" onerror="handleImgError(this)" alt="${project.name}" class="${imgClasses}" />
             </div>
             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
               <span class="text-white tracking-[0.2em] text-sm uppercase border border-white px-6 py-2">View Details</span>
@@ -492,9 +496,9 @@
     experiencesData.forEach((item, index) => {
       experiencesContainer.innerHTML += `
         <div class="border-b border-gray-200">
-          <button onclick="toggleAccordion(${index})" class="w-full text-left group py-6 md:py-8 px-6 hover:bg-[#1A1A1A] hover:text-white transition-all duration-500 cursor-pointer interactive-hover flex justify-between items-center">
-            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-16 transform transition-transform duration-500 group-hover:translate-x-4 flex-1">
-              <span class="font-light tracking-widest text-gray-400 group-hover:text-gray-300 transition-colors w-24">${item.date}</span>
+          <button id="btn-accordion-${index}" onclick="toggleAccordion(${index})" class="w-full text-left group py-6 md:py-8 px-6 hover:bg-[#1A1A1A] hover:text-white transition-all duration-500 cursor-pointer interactive-hover flex justify-between items-center">
+            <div id="content-inner-${index}" class="flex flex-col md:flex-row md:items-center gap-2 md:gap-16 transform transition-transform duration-500 group-hover:translate-x-4 flex-1">
+              <span id="date-span-${index}" class="font-light tracking-widest text-gray-400 group-hover:text-gray-300 transition-colors w-24">${item.date}</span>
               <h4 class="text-base md:text-lg font-light tracking-wider">${item.title}</h4>
             </div>
             <div class="text-gray-400 group-hover:text-white transition-transform duration-500 ml-4" id="icon-accordion-${index}">
@@ -656,15 +660,34 @@
     function toggleAccordion(index) {
       const content = document.getElementById(`content-accordion-${index}`);
       const icon = document.getElementById(`icon-accordion-${index}`);
+      const btn = document.getElementById(`btn-accordion-${index}`);
+      const innerContent = document.getElementById(`content-inner-${index}`);
+      const dateSpan = document.getElementById(`date-span-${index}`);
       
       if (content.style.maxHeight && content.style.maxHeight !== '0px') {
         // 收起
         content.style.maxHeight = '0px';
         icon.style.transform = 'rotate(0deg)';
+        
+        // 移除固定黑色狀態，恢復原始顏色與排版
+        btn.classList.remove('bg-[#1A1A1A]', 'text-white');
+        innerContent.classList.remove('translate-x-4');
+        dateSpan.classList.remove('text-gray-300');
+        dateSpan.classList.add('text-gray-400');
+        icon.classList.remove('text-white');
+        icon.classList.add('text-gray-400');
       } else {
         // 展開：將 max-height 設定為實際內容高度
         content.style.maxHeight = content.scrollHeight + 'px';
         icon.style.transform = 'rotate(45deg)';
+        
+        // 鎖定為觸摸時的黑色狀態與位移效果
+        btn.classList.add('bg-[#1A1A1A]', 'text-white');
+        innerContent.classList.add('translate-x-4');
+        dateSpan.classList.remove('text-gray-400');
+        dateSpan.classList.add('text-gray-300');
+        icon.classList.remove('text-gray-400');
+        icon.classList.add('text-white');
       }
     }
 
@@ -673,6 +696,13 @@
     // ----------------------------------------------------
     const modalOverlay = document.getElementById('modal-overlay');
     const modalContent = document.getElementById('modal-content');
+
+    // 處理隨意點擊關閉，同時防範誤觸
+    function handleModalClick(e) {
+      if (e.target.closest('button')) return;
+      if (window.getSelection().toString().length > 0) return;
+      closeModal();
+    }
 
     function openModal() {
       modalOverlay.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
@@ -745,10 +775,10 @@
       if(p.gallery && p.gallery.length > 0) {
         galleryHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-8">`;
         p.gallery.forEach((imgSrc, idx) => {
-          const spanClass = p.gallery.length === 1 ? 'md:col-span-2 aspect-video' : 'aspect-[4/3]';
+          const spanClass = p.gallery.length === 1 ? 'md:col-span-2' : '';
           galleryHTML += `
             <div class="bg-gray-200 flex items-center justify-center ${spanClass}">
-              <img src="${imgSrc || TRANSPARENT_PIXEL}" onerror="handleImgError(this)" alt="Gallery Image ${idx+1}" class="pop-image w-full h-full object-cover text-gray-400 text-sm" />
+              <img src="${imgSrc || TRANSPARENT_PIXEL}" onerror="handleImgError(this)" alt="Gallery Image ${idx+1}" class="pop-image w-full h-auto object-contain text-gray-400 text-sm" />
             </div>
           `;
         });
@@ -764,8 +794,8 @@
             </div>
           </div>
           
-          <div class="w-full aspect-video mb-16 bg-gray-200 flex items-center justify-center">
-            <img src="${p.img || TRANSPARENT_PIXEL}" onerror="handleImgError(this)" alt="${p.name} Main" class="pop-image w-full h-full object-cover text-gray-400 text-sm" />
+          <div class="w-full mb-16 bg-gray-200 flex items-center justify-center">
+            <img src="${p.img || TRANSPARENT_PIXEL}" onerror="handleImgError(this)" alt="${p.name} Main" class="pop-image w-full h-auto object-contain text-gray-400 text-sm" />
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
