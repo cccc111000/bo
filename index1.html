@@ -162,8 +162,11 @@
   <!-- Hero 區塊 -->
   <section class="relative h-screen flex flex-col justify-end pb-12 md:pb-24 px-6 md:px-12 2xl:px-24 overflow-hidden bg-black">
     <div class="absolute inset-0 z-0 opacity-60 bg-gray-800 flex items-center justify-center">
-      <!-- 替換為真實建築圖 -->
-      <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1774882739/Hero-Background-%E8%BD%89%E6%AA%94%E5%89%8D%E6%A0%BC%E5%BC%8F-%E7%82%BA-png_bwnl6j.webp" onerror="handleImgError(this)" alt="Hero-Background.png" class="pop-image w-full h-full object-cover text-gray-400 text-sm" />
+      <!-- 電腦版大圖 (lg 尺寸以上顯示，保留 object-right 固定人物) -->
+      <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1778143472/PORTFOLIO_1_lkfdrf.png" onerror="handleImgError(this)" alt="Hero-Desktop" class="hidden lg:block pop-image w-full h-full object-cover object-right text-gray-400 text-sm" />
+      
+      <!-- 手機與平板版專屬大圖 (lg 尺寸以下顯示，請在這裡的 src 替換成您的手機/平板版相片連結) -->
+      <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1778146829/2PORTFOLIO_cofpkr.png" onerror="handleImgError(this)" alt="Hero-Mobile-Tablet" class="block lg:hidden pop-image w-full h-full object-cover object-center text-gray-400 text-sm" />
     </div>
     
     <div class="w-full z-10 text-white">
@@ -366,7 +369,7 @@
         category: "學期設計", 
         year: "114-1", 
         shortDesc: "串聯照顧中心與開放空間，創造具文化傳承的複合場域。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880074/Return-main_fsxwi9.jpg", 
+        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778141289/db3a69cc-b318-4050-8bf2-98dd9d73a92a_y3xxgv.png", 
         details: "將兩基地整合成複合式場域。以道路串聯照顧中心與開放空間，並提供室內外選擇。透過道路與避雨棚改善，強化戶外活動與歷史長廊體驗，創造不受天氣影響，具文化傳承的複合式共享空間。",
         gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880095/Return5_yielpt.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880077/Return3_hz0xcv.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880081/Return4_f72kxo.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880078/Return6_tia0oe.jpg"] 
       },
@@ -376,7 +379,7 @@
         category: "學期設計",   
         year: "113-2",
         shortDesc: "透過自然調節與材料循環，打造永續實驗的交流工坊。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880088/And-main_axvpbq.png", 
+        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778141289/ChatGPT_Image_2026%E5%B9%B44%E6%9C%8828%E6%97%A5_%E4%B8%8B%E5%8D%8802_26_06_a8fopa.png", 
         details: "設計透過自然調節、材料循環與共享空間，讓工坊從能耗場所轉化為永續實驗的平台。建築在外部回應西曬與能耗，在內部營造舒適、開放的交流氛圍，讓研究與學習得以在自然與人本並存的環境中展開。",
         gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880095/And4_pnaa1a.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880089/And1_fijc36.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880091/And2_fle3hb.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880092/And3_vigdwq.png"] 
       },
@@ -772,13 +775,8 @@
               </div>
 
               <div class="mb-8">
-                <h4 class="text-lg text-black font-medium mb-3 flex items-center gap-3"><span class="w-8 h-[1px] bg-black inline-block"></span>轉學動機</h4>
-                <p>在五專期間，我多次至臺科大建築系旁聽課程、觀摩評圖與畢業設計展，並於高年級修習相關課程，對其教學方式有深入了解。相較傳統建築教育，臺科大更強調開放討論與多元觀點，讓設計成為持續探索與思考的過程，這也成為我申請轉學的重要動機。</p>
-              </div>
-
-              <div class="mb-8">
                 <h4 class="text-lg text-black font-medium mb-3 flex items-center gap-3"><span class="w-8 h-[1px] bg-black inline-block"></span>未來規劃</h4>
-                <p>若有機會進入臺科大就讀，我希望延續五專所累積的基礎，持續參與設計競圖與跨校交流，拓展設計視野，並結合泰語與英語優勢，從多元文化角度探討建築與社會的關係。</p>
+                <p>若有機會進入貴校就讀，我希望延續五專所累積的基礎，持續參與設計競圖與跨校交流，拓展設計視野，並結合泰語與英語優勢，從多元文化角度探討建築與社會的關係。</p>
                 <p class="mt-4">長遠而言，我規劃於完成學業與服役後前往泰國進修或就業，整合臺灣與泰國的建築與營造經驗，並在跨文化合作中發揮語言優勢，擔任溝通與整合的角色。期望以臺科大所培養的專業能力為基礎，在國際建築環境中持續發展。</p>
               </div>
 
