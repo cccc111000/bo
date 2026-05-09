@@ -571,6 +571,58 @@
       cursor.style.transform = `translate3d(${e.clientX - size / 2}px, ${e.clientY - size / 2}px, 0)`;
     });
 
+    document.addEventListener('mouseover', (e) => {
+      if (window.innerWidth < 1369) return;
+      if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.interactive-hover') || e.target.closest('.project-card') || e.target.closest('.theme-card-group')) {
+        isCursorHovering = true;
+        cursor.style.width = '12px';
+        cursor.style.height = '12px';
+        cursor.style.border = 'none';
+        cursor.style.backgroundColor = '#1A1A1A';
+        cursor.style.backdropFilter = 'none';
+        cursor.style.boxShadow = 'none';
+      } else {
+        isCursorHovering = false;
+        cursor.style.width = '64px';
+        cursor.style.height = '64px';
+        cursor.style.border = '1px solid rgba(0, 0, 0, 0.15)';
+        cursor.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+        cursor.style.backdropFilter = 'brightness(1.05) contrast(1.05)';
+        cursor.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 12px rgba(255,255,255,0.7), inset 0 0 4px rgba(255,255,255,0.9)';
+      }
+    });
+
+    document.querySelectorAll('.magnetic-link').forEach(link => {
+      link.addEventListener('mousemove', (e) => {
+        if (window.innerWidth < 1369) return;
+        const rect = link.getBoundingClientRect();
+        const x = (e.clientX - (rect.left + rect.width / 2)) * 0.3;
+        const y = (e.clientY - (rect.top + rect.height / 2)) * 0.3;
+        link.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.1)`;
+      });
+      link.addEventListener('mouseleave', () => {
+        if (window.innerWidth < 1369) return;
+        link.style.transform = `translate3d(0px, 0px, 0) scale(1)`;
+      });
+    });
+
+    document.querySelectorAll('.project-card').forEach(card => {
+      const bg = card.querySelector('.parallax-bg');
+      if(bg) {
+        card.addEventListener('mousemove', (e) => {
+          if (window.innerWidth < 1369) return;
+          const rect = card.getBoundingClientRect();
+          const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+          const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+          bg.style.transform = `translate3d(${x * 20}px, ${y * 20}px, 0) scale(1.05)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          if (window.innerWidth < 1369) return;
+          bg.style.transform = `translate3d(0px, 0px, 0) scale(1.05)`;
+        });
+      }
+    });
+
     // --- 4. 完美四邊對齊之動態間隔照片牆渲染器 (雙軌制) ---
     function buildGalleryHTML(galleryList) {
       if (!galleryList || galleryList.length === 0) return '';
