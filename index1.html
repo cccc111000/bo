@@ -250,8 +250,8 @@
                 <h4 class="block md:hidden text-white text-xl tracking-[0.2em] mb-6 font-light">畢業展覽</h4>
                 
                 <div class="relative w-full h-full overflow-hidden 
-                            rounded-l-[40px] rounded-r-[0px] 
-                            min-[1369px]:[transform:perspective(800px)_rotateY(15deg)_scale(0.95)]
+                            rounded-[20px] min-[1369px]:rounded-l-[40px] min-[1369px]:rounded-r-[0px] 
+                            transform-none min-[1369px]:[transform:perspective(800px)_rotateY(15deg)_scale(0.95)]
                             bg-[#1A1A1A] border border-gray-500 transition-colors duration-1000 theme-border-dim">
                     
                     <div class="theme-title-overlay absolute inset-0 hidden min-[1369px]:flex items-center justify-center transition-opacity duration-1000 z-20 pointer-events-none">
@@ -269,8 +269,8 @@
                 <h4 class="block md:hidden text-white text-xl tracking-[0.2em] mb-6 font-light">攝影</h4>
                 
                 <div class="relative w-full h-full overflow-hidden 
-                            rounded-r-[40px] rounded-l-[0px] min-[1369px]:rounded-[20px] 
-                            min-[1369px]:[transform:scale(1.05)] 
+                            rounded-[20px] 
+                            transform-none min-[1369px]:[transform:scale(1.05)] 
                             z-0 md:z-10 shadow-none min-[1369px]:shadow-[0_0_30px_rgba(0,0,0,0.5)]
                             bg-[#1A1A1A] border border-gray-500 transition-colors duration-1000 theme-border-dim">
                     
@@ -289,8 +289,8 @@
                 <h4 class="block md:hidden text-white text-xl tracking-[0.2em] mb-6 font-light">競賽設計</h4>
                 
                 <div class="relative w-full h-full overflow-hidden 
-                            rounded-l-[40px] rounded-r-[0px] min-[1369px]:rounded-r-[40px] min-[1369px]:rounded-l-[0px] 
-                            min-[1369px]:[transform:perspective(800px)_rotateY(-15deg)_scale(0.95)]
+                            rounded-[20px] min-[1369px]:rounded-r-[40px] min-[1369px]:rounded-l-[0px] 
+                            transform-none min-[1369px]:[transform:perspective(800px)_rotateY(-15deg)_scale(0.95)]
                             bg-[#1A1A1A] border border-gray-500 transition-colors duration-1000 theme-border-dim">
                     
                     <div class="theme-title-overlay absolute inset-0 hidden min-[1369px]:flex items-center justify-center transition-opacity duration-1000 z-20 pointer-events-none">
@@ -571,94 +571,75 @@
       cursor.style.transform = `translate3d(${e.clientX - size / 2}px, ${e.clientY - size / 2}px, 0)`;
     });
 
-    document.addEventListener('mouseover', (e) => {
-      if (window.innerWidth < 1369) return;
-      if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.interactive-hover') || e.target.closest('.project-card')) {
-        isCursorHovering = true;
-        cursor.style.width = '12px'; cursor.style.height = '12px'; cursor.style.border = 'none'; cursor.style.backgroundColor = '#1A1A1A'; cursor.style.backdropFilter = 'none'; cursor.style.boxShadow = 'none';
-      } else {
-        isCursorHovering = false;
-        cursor.style.width = '64px'; cursor.style.height = '64px'; cursor.style.border = '1px solid rgba(0, 0, 0, 0.15)'; cursor.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'; cursor.style.backdropFilter = 'brightness(1.05) contrast(1.05)'; cursor.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 12px rgba(255,255,255,0.7), inset 0 0 4px rgba(255,255,255,0.9)';
-      }
-    });
-
-    document.querySelectorAll('.magnetic-link').forEach(link => {
-      link.addEventListener('mousemove', (e) => {
-        const rect = link.getBoundingClientRect();
-        const x = (e.clientX - (rect.left + rect.width / 2)) * 0.3;
-        const y = (e.clientY - (rect.top + rect.height / 2)) * 0.3;
-        link.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.1)`;
-      });
-      link.addEventListener('mouseleave', () => {
-        link.style.transform = `translate3d(0px, 0px, 0) scale(1)`;
-      });
-    });
-
-    document.querySelectorAll('.project-card').forEach(card => {
-      const bg = card.querySelector('.parallax-bg');
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-        const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-        bg.style.transform = `translate3d(${x * 20}px, ${y * 20}px, 0) scale(1.05)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        bg.style.transform = `translate3d(0px, 0px, 0) scale(1.05)`;
-      });
-    });
-
-    function toggleAccordion(index) {
-      const content = document.getElementById(`content-accordion-${index}`);
-      const icon = document.getElementById(`icon-accordion-${index}`);
-      const btn = document.getElementById(`btn-accordion-${index}`);
-      const innerContent = document.getElementById(`content-inner-${index}`);
-      const dateSpan = document.getElementById(`date-span-${index}`);
-      
-      if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-        content.style.maxHeight = '0px'; icon.style.transform = 'rotate(0deg)';
-        btn.classList.remove('bg-[#1A1A1A]', 'text-white'); innerContent.classList.remove('translate-x-4'); dateSpan.classList.remove('text-gray-300'); dateSpan.classList.add('text-gray-400'); icon.classList.remove('text-white'); icon.classList.add('text-gray-400');
-        btn.blur();
-      } else {
-        content.style.maxHeight = content.scrollHeight + 'px'; icon.style.transform = 'rotate(45deg)';
-        btn.classList.add('bg-[#1A1A1A]', 'text-white'); innerContent.classList.add('translate-x-4'); dateSpan.classList.remove('text-gray-400'); dateSpan.classList.add('text-gray-300'); icon.classList.remove('text-gray-400'); icon.classList.add('text-white');
-      }
-    }
-
-    // --- 4. 完美四邊對齊之動態間隔照片牆渲染器 ---
-    // 這個函式會透過分離左右欄、並使用 justify-between 來消化兩邊高度差，達成四邊完美切齊且不扭曲比例的最終目標。
+    // --- 4. 完美四邊對齊之動態間隔照片牆渲染器 (雙軌制) ---
     function buildGalleryHTML(galleryList) {
       if (!galleryList || galleryList.length === 0) return '';
       
-      let leftCol = '';
-      let rightCol = '';
-      const pairsCount = Math.floor(galleryList.length / 2) * 2;
+      // 1. 手機版：單欄依序往下排 (使用 md:hidden 隱藏在電腦版)
+      let mobileHTML = '<div class="flex flex-col gap-8 w-full mb-12 md:hidden">';
+      galleryList.forEach(imgSrc => {
+        mobileHTML += `
+          <div class="w-full">
+            <img src="${imgSrc}" onerror="handleImgError(this)" class="pop-image w-full h-auto block" />
+          </div>
+        `;
+      });
+      mobileHTML += '</div>';
+
+      // 2. 電腦版：雙欄強迫齊行 (使用 hidden md:flex 隱藏在手機版)
+      let desktopHTML = '<div class="hidden md:flex flex-row gap-8 w-full mb-12">';
       
-      // 將圖片依序交錯放入左右兩欄
-      for(let i=0; i < pairsCount; i++) {
-        const imgTag = `<img src="${galleryList[i]}" onerror="handleImgError(this)" class="pop-image w-full h-auto block" />`;
-        if (i % 2 === 0) leftCol += imgTag;
-        else rightCol += imgTag;
-      }
-      
-      // 使用 grid 強制左右兩欄同高，並在內部使用 flex-col justify-between
-      // 這會讓兩欄各自透過「圖片之間的間距(Gap)」來填滿高度差，保證最上與最下的邊界絕對切齊！
-      let html = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch w-full mb-12">
-          <div class="flex flex-col justify-between gap-8 h-full w-full">${leftCol}</div>
-          <div class="flex flex-col justify-between gap-8 h-full w-full">${rightCol}</div>
-        </div>
-      `;
-      
-      // 如果照片總數是奇數，最後一張獨立擺放於底部置中
+      let leftCol = [];
+      let rightCol = [];
+
+      // 將圖片分發至左右兩欄
+      galleryList.forEach((imgSrc, index) => {
+        // 如果是奇數張的最後一張，它將不參與分欄，而是獨自佔滿下方空間
+        if (galleryList.length % 2 !== 0 && index === galleryList.length - 1) return; 
+
+        if (index % 2 === 0) {
+          leftCol.push(imgSrc);
+        } else {
+          rightCol.push(imgSrc);
+        }
+      });
+
+      // 左欄 (flex-col 與 justify-between 確保上下貼齊並動態調整間距)
+      desktopHTML += '<div class="flex-1 flex flex-col justify-between">';
+      leftCol.forEach(imgSrc => {
+        desktopHTML += `
+          <div class="w-full flex-grow flex items-center justify-center">
+            <img src="${imgSrc}" onerror="handleImgError(this)" class="pop-image w-full h-auto object-contain" />
+          </div>
+        `;
+      });
+      desktopHTML += '</div>';
+
+      // 右欄 (flex-col 與 justify-between 確保上下貼齊並動態調整間距)
+      desktopHTML += '<div class="flex-1 flex flex-col justify-between">';
+      rightCol.forEach(imgSrc => {
+        desktopHTML += `
+          <div class="w-full flex-grow flex items-center justify-center">
+            <img src="${imgSrc}" onerror="handleImgError(this)" class="pop-image w-full h-auto object-contain" />
+          </div>
+        `;
+      });
+      desktopHTML += '</div>';
+
+      desktopHTML += '</div>'; // 關閉雙欄容器
+
+      // 防凹陷設計：如果總數是奇數，最後一張獨立佔滿一列，放在雙欄下方
       if (galleryList.length % 2 !== 0) {
-        const lastImg = galleryList[galleryList.length - 1];
-        html += `
-          <div class="w-full flex justify-center mb-12">
-            <img src="${lastImg}" onerror="handleImgError(this)" class="pop-image w-full h-auto block" />
+        const lastImgSrc = galleryList[galleryList.length - 1];
+        desktopHTML += `
+          <div class="hidden md:flex w-full mt-8 justify-center">
+             <img src="${lastImgSrc}" onerror="handleImgError(this)" class="pop-image w-full h-auto object-contain" />
           </div>
         `;
       }
-      return html;
+
+      // 將兩種佈局合併返回
+      return mobileHTML + desktopHTML;
     }
 
     // --- 5. 彈出視窗 (Modal) 邏輯 ---
