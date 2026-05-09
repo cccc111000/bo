@@ -5,13 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yang Po-Hsuan | Architecture Portfolio</title>
   
-  <!-- 引入 Tailwind CSS 進行排版 -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- 引入 Lucide 圖示庫 -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- 自訂動畫與樣式 -->
+  <script>
+    const TRANSPARENT_PIXEL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    function handleImgError(img) {
+      img.onerror = null;
+      img.src = TRANSPARENT_PIXEL;
+    }
+  </script>
+
   <style>
     :root {
       --brand-color: #1A1A1A;
@@ -50,13 +54,6 @@
       animation: fadeInUp 0.8s ease-out forwards;
     }
 
-    /* 隱藏原生游標 */
-    @media (hover: hover) and (pointer: fine) {
-      body, a, button {
-        cursor: none !important;
-      }
-    }
-
     /* 圖片淡入預設樣式 */
     .pop-image {
       opacity: 0;
@@ -66,7 +63,40 @@
       opacity: 1;
     }
 
-    /* 手機版選單動畫 (高級帷幕滑落與文字交錯遮罩浮現) - 已加入 GPU 加速優化 */
+    /* --- 精確控制 1369px 以上才觸發的游標與 Hover 動效 --- */
+    @media (min-width: 1369px) {
+      body, a, button {
+        cursor: none !important;
+      }
+      
+      /* Theme Showcase 電腦版懸停特效 */
+      .theme-card-group:hover .theme-title-overlay {
+        opacity: 0;
+      }
+      .theme-card-group:hover .theme-image-reveal {
+        clip-path: circle(150% at 100% 100%);
+      }
+      .theme-card-group:hover .theme-border-dim {
+        border-color: #111;
+      }
+      
+      /* Awards 經歷列表電腦版懸停特效 */
+      .award-item-btn:hover {
+        background-color: #1A1A1A;
+        color: white;
+      }
+      .award-item-btn:hover .award-date {
+        color: #d1d5db; /* text-gray-300 */
+      }
+      .award-item-btn:hover .award-icon {
+        color: white;
+      }
+      .award-item-btn:hover .award-content {
+        transform: translateX(16px);
+      }
+    }
+
+    /* --- 手機版選單動畫 --- */
     #mobile-menu {
       visibility: hidden;
       transform: translate3d(0, -100%, 0);
@@ -79,7 +109,6 @@
       transform: translate3d(0, 0, 0);
       transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), visibility 0s linear 0s;
     }
-    /* 文字遮罩容器：負責隱藏還沒升起的文字 */
     .menu-item-wrapper {
       overflow: hidden;
       padding: 8px 0; 
@@ -90,16 +119,13 @@
       opacity: 0;
       will-change: transform, opacity;
       backface-visibility: hidden;
-      /* 收起時的快速退場動畫 */
       transition: transform 0.4s ease-in, opacity 0.4s ease-in;
     }
     #mobile-menu.is-open .mobile-link {
       transform: translate3d(0, 0, 0);
       opacity: 1;
-      /* 展開時：文字由下往上緩慢升起 */
       transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease-out;
     }
-    /* 設定延遲，讓文字在選單落下(0.8s)的後半段才開始依序浮現 */
     #mobile-menu.is-open .menu-item-wrapper:nth-child(1) .mobile-link { transition-delay: 0.4s; }
     #mobile-menu.is-open .menu-item-wrapper:nth-child(2) .mobile-link { transition-delay: 0.5s; }
     #mobile-menu.is-open .menu-item-wrapper:nth-child(3) .mobile-link { transition-delay: 0.6s; }
@@ -108,10 +134,8 @@
 </head>
 <body class="relative">
 
-  <!-- 動態透鏡游標 -->
-  <div id="custom-cursor" class="hidden md:flex fixed top-0 left-0 pointer-events-none z-[9999] items-center justify-center rounded-full will-change-transform" style="width: 64px; height: 64px; border: 1px solid rgba(0, 0, 0, 0.15); background-color: rgba(255, 255, 255, 0.05); backdrop-filter: brightness(1.05) contrast(1.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 12px rgba(255,255,255,0.7), inset 0 0 4px rgba(255,255,255,0.9); transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s ease-out, background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s, border 0.3s;"></div>
+  <div id="custom-cursor" class="hidden min-[1369px]:flex fixed top-0 left-0 pointer-events-none z-[9999] items-center justify-center rounded-full will-change-transform" style="width: 64px; height: 64px; border: 1px solid rgba(0, 0, 0, 0.15); background-color: rgba(255, 255, 255, 0.05); backdrop-filter: brightness(1.05) contrast(1.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 12px rgba(255,255,255,0.7), inset 0 0 4px rgba(255,255,255,0.9); transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s ease-out, background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s, border 0.3s;"></div>
 
-  <!-- 導覽列 -->
   <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-8">
     <div class="w-full px-6 md:px-12 2xl:px-24 flex justify-between items-center">
       <div class="nav-text-color text-white text-xl md:text-xl font-light tracking-[0.2em] z-50 relative uppercase transition-colors duration-300 interactive-hover">
@@ -133,39 +157,18 @@
     </div>
   </nav>
 
-  <!-- 手機版下拉選單 (已移出 nav 避免毛玻璃層干擾動畫效能) -->
   <div id="mobile-menu" class="md:hidden fixed inset-0 bg-[#F9F9F9] z-40 flex flex-col justify-center items-center rounded-b-[40px] shadow-2xl">
     <div class="flex flex-col items-center space-y-10 text-3xl font-light tracking-[0.3em] uppercase brand-text">
-      <div class="menu-item-wrapper">
-        <a href="#motivation" class="mobile-link">
-          <span class="block hover:opacity-50 transition-opacity duration-300">Motivation</span>
-        </a>
-      </div>
-      <div class="menu-item-wrapper">
-        <a href="#portfolio" class="mobile-link">
-          <span class="block hover:opacity-50 transition-opacity duration-300">Portfolio</span>
-        </a>
-      </div>
-      <div class="menu-item-wrapper">
-        <a href="#capabilities" class="mobile-link">
-          <span class="block hover:opacity-50 transition-opacity duration-300">Capabilities</span>
-        </a>
-      </div>
-      <div class="menu-item-wrapper">
-        <a href="#contact" class="mobile-link">
-          <span class="block hover:opacity-50 transition-opacity duration-300">Contact</span>
-        </a>
-      </div>
+      <div class="menu-item-wrapper"><a href="#motivation" class="mobile-link"><span class="block hover:opacity-50 transition-opacity duration-300">Motivation</span></a></div>
+      <div class="menu-item-wrapper"><a href="#portfolio" class="mobile-link"><span class="block hover:opacity-50 transition-opacity duration-300">Portfolio</span></a></div>
+      <div class="menu-item-wrapper"><a href="#capabilities" class="mobile-link"><span class="block hover:opacity-50 transition-opacity duration-300">Capabilities</span></a></div>
+      <div class="menu-item-wrapper"><a href="#contact" class="mobile-link"><span class="block hover:opacity-50 transition-opacity duration-300">Contact</span></a></div>
     </div>
   </div>
 
-  <!-- Hero 區塊 -->
   <section class="relative h-screen flex flex-col justify-end pb-12 md:pb-24 px-6 md:px-12 2xl:px-24 overflow-hidden bg-black">
     <div class="absolute inset-0 z-0 opacity-60 bg-gray-800 flex items-center justify-center">
-      <!-- 電腦版大圖 (lg 尺寸以上顯示，保留 object-right 固定人物) -->
       <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1778143472/PORTFOLIO_1_lkfdrf.png" onerror="handleImgError(this)" alt="Hero-Desktop" class="hidden lg:block pop-image w-full h-full object-cover object-right text-gray-400 text-sm" />
-      
-      <!-- 手機與平板版專屬大圖 (lg 尺寸以下顯示，請在這裡的 src 替換成您的手機/平板版相片連結) -->
       <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1778146829/2PORTFOLIO_cofpkr.png" onerror="handleImgError(this)" alt="Hero-Mobile-Tablet" class="block lg:hidden pop-image w-full h-full object-cover object-center text-gray-400 text-sm" />
     </div>
     
@@ -184,20 +187,13 @@
     </div>
   </section>
 
-  <!-- 轉學動機 MOTIVATION -->
   <section id="motivation" class="py-32 md:py-48 px-6 md:px-12 2xl:px-24 w-full grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
     <div class="md:col-span-5 order-2 md:order-1">
       <h2 class="text-xs font-medium tracking-[0.4em] text-gray-400 mb-8 uppercase">Motivation</h2>
-      <h3 class="text-3xl md:text-4xl font-light leading-relaxed mb-8 tracking-widest">
-        關於我與設計願景
-      </h3>
+      <h3 class="text-3xl md:text-4xl font-light leading-relaxed mb-8 tracking-widest">關於我與設計願景</h3>
       <div class="space-y-6 text-gray-500 font-light leading-loose text-sm md:text-base tracking-wider text-justify">
-        <p>
-          生長於台泰雙文化家庭，多元身分讓我習慣以不同視角觀察環境，將對人流氛圍的感性捕捉轉化為建築邏輯。五專五年間，我深耕 BIM 與數位建模，並連續兩屆於抗震盃競賽中，從硬結構防禦演進至韌性消能實踐，具備紮實的構造思維。
-        </p>
-        <p>
-          運動員的背景則內化為我面對複雜設計挑戰時的抗壓性。我追求設計的「落地感」，期望未來發揮泰語母語優勢，成為連結跨國營造技術與空間美學的橋樑。
-        </p>
+        <p>生長於台泰雙文化家庭，多元身分讓我習慣以不同視角觀察環境，將對人流氛圍的感性捕捉轉化為建築邏輯。五專五年間，我深耕 BIM 與數位建模，並連續兩屆於抗震盃競賽中，從硬結構防禦演進至韌性消能實踐，具備紮實的構造思維。</p>
+        <p>運動員的背景則內化為我面對複雜設計挑戰時的抗壓性。我追求設計的「落地感」，期望未來發揮泰語母語優勢，成為連結跨國營造技術與空間美學的橋樑。</p>
       </div>
       <div class="mt-12 flex gap-6">
         <button onclick="openMotivationModal()" class="border border-black bg-black text-white px-8 py-3 text-xs tracking-[0.2em] uppercase hover:bg-gray-800 transition-colors duration-300 interactive-hover">
@@ -207,13 +203,11 @@
     </div>
     <div class="md:col-span-7 order-1 md:order-2 overflow-hidden group">
       <div class="transform transition-transform duration-[2000ms] group-hover:scale-105 will-change-transform bg-gray-200 aspect-[4/3] md:aspect-[3/2]">
-        <!-- 替換為建築模型工作照 -->
         <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1774879330/me1_xhzq4k.jpg" onerror="handleImgError(this)" alt="關於我" class="pop-image w-full h-full text-gray-400 flex items-center justify-center text-sm object-cover" />
       </div>
     </div>
   </section>
 
-  <!-- 跑馬燈裝飾 -->
   <div class="brand-bg text-white py-5 overflow-hidden whitespace-nowrap flex">
     <div class="animate-marquee text-sm md:text-lg font-light uppercase tracking-[0.3em] flex items-center">
       <span class="mx-12">HYBRID</span><span class="mx-12">•</span>
@@ -227,7 +221,6 @@
     </div>
   </div>
 
-  <!-- 作品集 PORTFOLIO -->
   <section id="portfolio" class="py-32 bg-white">
     <div class="w-full px-6 md:px-12 2xl:px-24">
       <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-20 gap-6">
@@ -236,14 +229,84 @@
           <h3 class="text-3xl md:text-4xl font-light tracking-widest">建築設計與創作成果</h3>
         </div>
       </div>
-
-      <!-- 作品集卡片將由 JavaScript 動態生成於此 -->
       <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24">
+        <!-- 作品集卡片將由 JavaScript 動態生成於此 -->
       </div>
     </div>
   </section>
 
-  <!-- 專業技能與課外經歷 CAPABILITIES & EXTRAS -->
+  <section id="theme-showcase" class="py-32 bg-black overflow-hidden relative">
+    <div class="w-full px-6 md:px-12 2xl:px-24">
+        <div class="text-center mb-20">
+            <h2 class="text-xs font-medium tracking-[0.4em] text-gray-400 mb-4 uppercase">Thematic Explorations</h2>
+            <h3 class="text-3xl md:text-4xl font-light tracking-widest text-white">跨領域主題設計</h3>
+        </div>
+
+        <!-- 三欄式展示區域 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 items-center justify-center max-w-7xl mx-auto md:h-[500px]">
+            
+            <!-- Theme 1：畢業展覽 -->
+            <div class="flex flex-col items-center w-full h-[450px] md:h-full cursor-pointer interactive-hover theme-card-group" onclick="openThemeModal('theme1')">
+                <h4 class="block md:hidden text-white text-xl tracking-[0.2em] mb-6 font-light">畢業展覽</h4>
+                
+                <div class="relative w-full h-full overflow-hidden 
+                            rounded-l-[40px] rounded-r-[0px] 
+                            min-[1369px]:[transform:perspective(800px)_rotateY(15deg)_scale(0.95)]
+                            bg-[#1A1A1A] border border-gray-500 transition-colors duration-1000 theme-border-dim">
+                    
+                    <div class="theme-title-overlay absolute inset-0 hidden min-[1369px]:flex items-center justify-center transition-opacity duration-1000 z-20 pointer-events-none">
+                        <span class="text-white text-2xl tracking-[0.2em] font-light">畢業展覽</span>
+                    </div>
+
+                    <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318862/%E4%B8%BB_fbedm2.jpg" alt="畢業展覽" 
+                         class="theme-image-reveal absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out 
+                                min-[1369px]:[clip-path:circle(0%_at_100%_100%)] z-10" />
+                </div>
+            </div>
+
+            <!-- Theme 2：攝影 -->
+            <div class="flex flex-col items-center w-full h-[450px] md:h-full cursor-pointer interactive-hover theme-card-group" onclick="openThemeModal('theme2')">
+                <h4 class="block md:hidden text-white text-xl tracking-[0.2em] mb-6 font-light">攝影</h4>
+                
+                <div class="relative w-full h-full overflow-hidden 
+                            rounded-r-[40px] rounded-l-[0px] min-[1369px]:rounded-[20px] 
+                            min-[1369px]:[transform:scale(1.05)] 
+                            z-0 md:z-10 shadow-none min-[1369px]:shadow-[0_0_30px_rgba(0,0,0,0.5)]
+                            bg-[#1A1A1A] border border-gray-500 transition-colors duration-1000 theme-border-dim">
+                    
+                    <div class="theme-title-overlay absolute inset-0 hidden min-[1369px]:flex items-center justify-center transition-opacity duration-1000 z-20 pointer-events-none">
+                        <span class="text-white text-2xl tracking-[0.2em] font-light">攝影</span>
+                    </div>
+
+                    <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1778316467/%E4%B8%BBlogo_tsvqgh.jpg" alt="攝影" 
+                         class="theme-image-reveal absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out 
+                                min-[1369px]:[clip-path:circle(0%_at_100%_100%)] z-10" />
+                </div>
+            </div>
+
+            <!-- Theme 3：競賽設計 -->
+            <div class="flex flex-col items-center w-full h-[450px] md:h-full cursor-pointer interactive-hover theme-card-group" onclick="openThemeModal('theme3')">
+                <h4 class="block md:hidden text-white text-xl tracking-[0.2em] mb-6 font-light">競賽設計</h4>
+                
+                <div class="relative w-full h-full overflow-hidden 
+                            rounded-l-[40px] rounded-r-[0px] min-[1369px]:rounded-r-[40px] min-[1369px]:rounded-l-[0px] 
+                            min-[1369px]:[transform:perspective(800px)_rotateY(-15deg)_scale(0.95)]
+                            bg-[#1A1A1A] border border-gray-500 transition-colors duration-1000 theme-border-dim">
+                    
+                    <div class="theme-title-overlay absolute inset-0 hidden min-[1369px]:flex items-center justify-center transition-opacity duration-1000 z-20 pointer-events-none">
+                        <span class="text-white text-2xl tracking-[0.2em] font-light">競賽設計</span>
+                    </div>
+
+                    <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318813/%E4%B8%BB_zf0kpd.jpg" alt="競賽設計" 
+                         class="theme-image-reveal absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out 
+                                min-[1369px]:[clip-path:circle(0%_at_100%_100%)] z-10" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+  </section>
+
   <section id="capabilities" class="py-32 md:py-48 px-6 md:px-12 2xl:px-24 w-full">
     <div class="text-center mb-24">
       <h2 class="text-xs font-medium tracking-[0.4em] text-gray-400 mb-4 uppercase">Value-adds</h2>
@@ -255,23 +318,17 @@
       <div class="flex flex-col items-center text-center p-8 border border-gray-100 bg-white group hover:border-gray-300 transition-colors">
         <div class="mb-6 text-gray-400 group-hover:text-black transition-colors"><i data-lucide="monitor" stroke-width="1" style="width: 32px; height: 32px;"></i></div>
         <h4 class="font-medium tracking-[0.2em] uppercase mb-4">3D & BIM</h4>
-        <p class="text-sm font-light text-gray-500 tracking-widest leading-relaxed">
-          AutoCAD <br/> SketchUp <br/> Revit <br/> Enscape <br/> Lumion <br/> D5 Render <br/> Twinmotion
-        </p>
+        <p class="text-sm font-light text-gray-500 tracking-widest leading-relaxed">AutoCAD <br/> SketchUp <br/> Revit <br/> Enscape <br/> Lumion <br/> D5 Render <br/> Twinmotion</p>
       </div>
       <div class="flex flex-col items-center text-center p-8 border border-gray-100 bg-white group hover:border-gray-300 transition-colors">
         <div class="mb-6 text-gray-400 group-hover:text-black transition-colors"><i data-lucide="pen-tool" stroke-width="1" style="width: 32px; height: 32px;"></i></div>
         <h4 class="font-medium tracking-[0.2em] uppercase mb-4">Visual & Graphic</h4>
-        <p class="text-sm font-light text-gray-500 tracking-widest leading-relaxed">
-          Photoshop <br/> Illustrator <br/> InDesign
-        </p>
+        <p class="text-sm font-light text-gray-500 tracking-widest leading-relaxed">Photoshop <br/> Illustrator <br/> InDesign</p>
       </div>
       <div class="flex flex-col items-center text-center p-8 border border-gray-100 bg-white group hover:border-gray-300 transition-colors">
         <div class="mb-6 text-gray-400 group-hover:text-black transition-colors"><i data-lucide="award" stroke-width="1" style="width: 32px; height: 32px;"></i></div>
         <h4 class="font-medium tracking-[0.2em] uppercase mb-4">Certifications</h4>
-        <p class="text-sm font-light text-gray-500 tracking-widest leading-relaxed">
-          丙級建築製圖應用技術士 (手繪) <br/> 丙級建築製圖應用技術士 (電繪) <br/> ISCA 國際B+C級拳擊體適能教練
-        </p>
+        <p class="text-sm font-light text-gray-500 tracking-widest leading-relaxed">丙級建築製圖應用技術士 (手繪) <br/> 丙級建築製圖應用技術士 (電繪) <br/> ISCA 國際B+C級拳擊體適能教練</p>
       </div>
     </div>
 
@@ -282,208 +339,106 @@
     </div>
   </section>
 
-  <!-- 頁尾 FOOTER -->
   <footer id="contact" class="bg-transparent text-[#1A1A1A] pt-32 pb-12 px-6 md:px-12 2xl:px-24">
     <div class="w-full flex flex-col md:flex-row justify-between items-center md:items-end gap-12 border-t border-gray-200 pt-12">
-      <!-- 左側：回到頂部 -->
       <div class="w-full md:w-1/3 flex justify-center md:justify-start">
-        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="magnetic-link font-serif italic text-sm tracking-widest hover:opacity-50 transition-opacity">
-          Back To Top
-        </a>
+        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="magnetic-link font-serif italic text-sm tracking-widest hover:opacity-50 transition-opacity">Back To Top</a>
       </div>
-      
-      <!-- 中間：社群與聯絡方式 -->
       <div class="w-full md:w-1/3 flex justify-center items-center gap-4 text-sm font-serif italic tracking-[0.2em]">
         <a href="https://www.instagram.com/boboru.o0?igsh=MWZraWE2bmNxMmo1ag%3D%3D" target="_blank" rel="noopener noreferrer" class="magnetic-link hover:opacity-50 transition-opacity">IG</a>
         <span class="opacity-30 text-xs">|</span>
         <a href="mailto:pohsuan.yang@example.com" class="magnetic-link hover:opacity-50 transition-opacity">EMAIL</a>
       </div>
-
-      <!-- 右側：個人品牌標示 -->
       <div class="w-full md:w-1/3 flex justify-center md:justify-end text-center md:text-right">
-        <div class="text-[10px] md:text-[11px] tracking-[0.3em] uppercase leading-relaxed font-medium">
-          YANG PO-HSUAN
-        </div>
+        <div class="text-[10px] md:text-[11px] tracking-[0.3em] uppercase leading-relaxed font-medium">YANG PO-HSUAN</div>
       </div>
     </div>
   </footer>
 
-  <!-- 全螢幕細節視窗 (Modal) -->
   <div id="modal-overlay" class="fixed inset-0 z-[8000] bg-[#F9F9F9] transition-all duration-700 ease-in-out overflow-y-auto opacity-0 translate-y-12 pointer-events-none cursor-pointer" onclick="handleModalClick(event)">
     <button onclick="closeModal()" class="fixed top-8 right-8 md:top-12 md:right-12 z-[8010] p-4 bg-white/80 backdrop-blur-md rounded-full interactive-hover hover:bg-black hover:text-white transition-colors border border-gray-200 shadow-sm text-black">
       <i data-lucide="x" stroke-width="1.5" style="width: 24px; height: 24px;"></i>
     </button>
-
     <div id="modal-content" class="min-h-screen px-6 py-24 md:px-24 2xl:px-48 w-full relative cursor-default">
       <!-- 彈出視窗內容將由 JavaScript 注入 -->
     </div>
   </div>
 
-  <!-- JavaScript 邏輯區塊 -->
   <script>
-    // ----------------------------------------------------
-    // 1. 資料區塊 (請在這裡填入您的圖片與文字)
-    // ----------------------------------------------------
-    const TRANSPARENT_PIXEL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-
-    function handleImgError(img) {
-      img.onerror = null;
-      img.src = TRANSPARENT_PIXEL;
-    }
-
-    // 更新了預設圖片，讓預覽有更好的視覺體驗
+    // --- 1. 資料區塊 ---
     const projectsData = [
-      { 
-        id: 0,
-        name: "重場域新譯:城隍廟街區的文化共生更新", 
-        category: "畢業設計", 
-        year: "114-2 ~ 115-2", 
-        shortDesc: "以建築量體重新縫合都市邊緣，展現整合設計能力。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774882711/graduate-main-%E8%BD%89%E6%AA%94%E5%89%8D%E6%A0%BC%E5%BC%8F-%E7%82%BA-png_ourmmb.webp", 
-        details: "探討基礎設施如何切斷都市紋理，並試圖以建築量體重新縫合都市邊緣。此畢業設計耗時一年，從前期的都市涵構分析到最終的構造細節，全面展示了整合設計的能力。",
-        gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774879296/graduate1_t1hqpd.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774879296/graduate2_eusduh.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774882711/graduate4-%E8%BD%89%E6%AA%94%E5%89%8D%E6%A0%BC%E5%BC%8F-%E7%82%BA-png_yfqnhg.webp", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774882712/graduate3-%E8%BD%89%E6%AA%94%E5%89%8D%E6%A0%BC%E5%BC%8F-%E7%82%BA-png_pd9dl0.webp"] 
-      },
-      { 
-        id: 1,
-        name: "棲谷藝境", 
-        category: "學期設計",
-        year: "114-2", 
-        shortDesc: "平衡科技運用，填補情感空缺並重建人與人的連結。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880100/Perch-main_honk1i.png", 
-        details: "現代兒童在科技與經濟壓力雙重影響下成長。過度依賴科技削弱其社交與探索能力而經濟壓力則壓縮親子陪伴時間，造成情感空缺。我設計旨在平衡科技運用，並填補人際關係的空白，重建人與人的連結。",
-        gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796039/%E8%A8%AD%E8%A8%88%E5%85%AD%E5%9C%96%E7%89%87%E6%9B%B4%E6%9B%BF_2_swobxl.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796027/%E8%A8%AD%E8%A8%88%E5%85%AD%E5%9C%96%E7%89%87%E6%9B%B4%E6%9B%BF_1_j8v694.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880100/perch4_t48iqw.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880086/perch5_ze9iak.png"] 
-      },
-      { 
-        id: 2,
-        name: "Nature Ring", 
-        category: "學期設計", 
-        year: "114-1",
-        shortDesc: "打造共享空間，創新保存與傳承客家語言及文化傳統。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796040/%E8%A8%AD%E8%A8%88%E4%BA%94%E4%B8%BB%E5%9C%96_mnfjr1.png", 
-        details: "打造共享社區空間，結合文化交流與教育，解決公共設施不足問題，並透過創新方式保存與傳承客家語言、文化與傳統，讓年輕一代也能理解並延續其活力。",
-        gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880061/Nature1_pfilzt.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880074/Nature2_go0ufw.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880077/Nature3_l8kgbw.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880064/Nature5_tokzac.jpg"] 
-      },
-      { 
-        id: 3,
-        name: "迴棧", 
-        category: "學期設計", 
-        year: "114-1", 
-        shortDesc: "串聯照顧中心與開放空間，創造具文化傳承的複合場域。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778141289/db3a69cc-b318-4050-8bf2-98dd9d73a92a_y3xxgv.png", 
-        details: "將兩基地整合成複合式場域。以道路串聯照顧中心與開放空間，並提供室內外選擇。透過道路與避雨棚改善，強化戶外活動與歷史長廊體驗，創造不受天氣影響，具文化傳承的複合式共享空間。",
-        gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880095/Return5_yielpt.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880077/Return3_hz0xcv.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880081/Return4_f72kxo.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880078/Return6_tia0oe.jpg"] 
-      },
-      { 
-        id: 4,
-        name: "與森林築舞", 
-        category: "學期設計",   
-        year: "113-2",
-        shortDesc: "透過自然調節與材料循環，打造永續實驗的交流工坊。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778141289/ChatGPT_Image_2026%E5%B9%B44%E6%9C%8828%E6%97%A5_%E4%B8%8B%E5%8D%8802_26_06_a8fopa.png", 
-        details: "設計透過自然調節、材料循環與共享空間，讓工坊從能耗場所轉化為永續實驗的平台。建築在外部回應西曬與能耗，在內部營造舒適、開放的交流氛圍，讓研究與學習得以在自然與人本並存的環境中展開。",
-        gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880095/And4_pnaa1a.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880089/And1_fijc36.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880091/And2_fle3hb.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880092/And3_vigdwq.png"] 
-      },
-      { 
-        id: 5,
-        name: "林居", 
-        category: "學期設計", 
-        year: "113-2",
-        shortDesc: "以大樹為寓意，轉化為群體協作的量體與空間語彙。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796039/%E8%A8%AD%E8%A8%88%E4%BA%8C%E4%B8%BB%E5%9C%96_xkjo8f.png", 
-        details: "建物擬做大樹寓意不論老樹或新樹，都在土地上共同紮根並相互連繫，展現一種群體協作的姿態。這樣的概念被轉化為量體與外觀的語彙，並進一步落實於空間規劃，讓居住者在生活中能更直接地與建築產生互動。",
-        gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796039/%E8%A8%AD%E8%A8%88%E4%BA%8C%E5%89%AF%E5%9C%96_gyeoxt.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880084/Forest1_u4unw1.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880084/Forest4_a67aqp.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880069/Forest3_t7nwkx.png"] 
-      },
-      { 
-        id: 6,
-        name: "川讀空間", 
-        category: "學期設計", 
-        year: "113-1",
-        shortDesc: "以瀑布意象打造複合式咖啡廳，凝聚閱讀愛好者。",
-        img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796033/%E8%A8%AD%E8%A8%88%E4%B8%80%E4%B8%BB%E5%9C%96_cwzwf1.png",
-        details: "凝聚都市中散落的文青與閱讀愛好者，複合式咖啡廳的形式，提供一個能停留交流與休憩的場域。建築外觀以瀑布意象作為主要語彙，象徵知識與靈感的源源流動，也暗示空間能成為人群聚集與交流的能量場域。",
-        gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880075/Sichuan2_bvn5ro.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880063/Sichuan1_evqvxj.png"] 
-      }
+      { id: 0, name: "重場域新譯:城隍廟街區的文化共生更新", category: "畢業設計", year: "114-2 ~ 115-2", shortDesc: "以建築量體重新縫合都市邊緣，展現整合設計能力。", img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774882711/graduate-main-%E8%BD%89%E6%AA%94%E5%89%8D%E6%A0%BC%E5%BC%8F-%E7%82%BA-png_ourmmb.webp", details: "探討基礎設施如何切斷都市紋理，並試圖以建築量體重新縫合都市邊緣。此畢業設計耗時一年，從前期的都市涵構分析到最終的構造細節，全面展示了整合設計的能力。", gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774879296/graduate1_t1hqpd.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774879296/graduate2_eusduh.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774882711/graduate4-%E8%BD%89%E6%AA%94%E5%89%8D%E6%A0%BC%E5%BC%8F-%E7%82%BA-png_yfqnhg.webp", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774882712/graduate3-%E8%BD%89%E6%AA%94%E5%89%8D%E6%A0%BC%E5%BC%8F-%E7%82%BA-png_pd9dl0.webp"] },
+      { id: 1, name: "棲谷藝境", category: "學期設計", year: "114-2", shortDesc: "平衡科技運用，填補情感空缺並重建人與人的連結。", img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880100/Perch-main_honk1i.png", details: "現代兒童在科技與經濟壓力雙重影響下成長。過度依賴科技削弱其社交與探索能力而經濟壓力則壓縮親子陪伴時間，造成情感空缺。我設計旨在平衡科技運用，並填補人際關係的空白，重建人與人的連結。", gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796039/%E8%A8%AD%E8%A8%88%E5%85%AD%E5%9C%96%E7%89%87%E6%9B%B4%E6%9B%BF_2_swobxl.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796027/%E8%A8%AD%E8%A8%88%E5%85%AD%E5%9C%96%E7%89%87%E6%9B%B4%E6%9B%BF_1_j8v694.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880100/perch4_t48iqw.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880086/perch5_ze9iak.png"] },
+      { id: 2, name: "Nature Ring", category: "學期設計", year: "114-1", shortDesc: "打造共享空間，創新保存與傳承客家語言及文化傳統。", img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796040/%E8%A8%AD%E8%A8%88%E4%BA%94%E4%B8%BB%E5%9C%96_mnfjr1.png", details: "打造共享社區空間，結合文化交流與教育，解決公共設施不足問題，並透過創新方式保存與傳承客家語言、文化與傳統，讓年輕一代也能理解並延續其活力。", gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880061/Nature1_pfilzt.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880074/Nature2_go0ufw.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880077/Nature3_l8kgbw.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880064/Nature5_tokzac.jpg"] },
+      { id: 3, name: "迴棧", category: "學期設計", year: "114-1", shortDesc: "串聯照顧中心與開放空間，創造具文化傳承的複合場域。", img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778141289/db3a69cc-b318-4050-8bf2-98dd9d73a92a_y3xxgv.png", details: "將兩基地整合成複合式場域。以道路串聯照顧中心與開放空間，並提供室內外選擇。透過道路與避雨棚改善，強化戶外活動與歷史長廊體驗，創造不受天氣影響，具文化傳承的複合式共享空間。", gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880095/Return5_yielpt.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880077/Return3_hz0xcv.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880081/Return4_f72kxo.jpg", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880078/Return6_tia0oe.jpg"] },
+      { id: 4, name: "與森林築舞", category: "學期設計", year: "113-2", shortDesc: "透過自然調節與材料循環，打造永續實驗的交流工坊。", img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778141289/ChatGPT_Image_2026%E5%B9%B44%E6%9C%8828%E6%97%A5_%E4%B8%8B%E5%8D%8802_26_06_a8fopa.png", details: "設計透過自然調節、材料循環與共享空間，讓工坊從能耗場所轉化為永續實驗的平台。建築在外部回應西曬與能耗，在內部營造舒適、開放的交流氛圍，讓研究與學習得以在自然與人本並存的環境中展開。", gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880095/And4_pnaa1a.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880089/And1_fijc36.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880091/And2_fle3hb.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880092/And3_vigdwq.png"] },
+      { id: 5, name: "林居", category: "學期設計", year: "113-2", shortDesc: "以大樹為寓意，轉化為群體協作的量體與空間語彙。", img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796039/%E8%A8%AD%E8%A8%88%E4%BA%8C%E4%B8%BB%E5%9C%96_xkjo8f.png", details: "建物擬做大樹寓意不論老樹或新樹，都在土地上共同紮根並相互連繫，展現一種群體協作的姿態。這樣的概念被轉化為量體與外觀的語彙，並進一步落實於空間規劃，讓居住者在生活中能更直接地與建築產生互動。", gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796039/%E8%A8%AD%E8%A8%88%E4%BA%8C%E5%89%AF%E5%9C%96_gyeoxt.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880084/Forest1_u4unw1.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880084/Forest4_a67aqp.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880069/Forest3_t7nwkx.png"] },
+      { id: 6, name: "川讀空間", category: "學期設計", year: "113-1", shortDesc: "以瀑布意象打造複合式咖啡廳，凝聚閱讀愛好者。", img: "https://res.cloudinary.com/dgc4hpm10/image/upload/v1777796033/%E8%A8%AD%E8%A8%88%E4%B8%80%E4%B8%BB%E5%9C%96_cwzwf1.png", details: "凝聚都市中散落的文青與閱讀愛好者，複合式咖啡廳的形式，提供一個能停留交流與休憩的場域。建築外觀以瀑布意象作為主要語彙，象徵知識與靈感的源源流動，也暗示空間能成為人群聚集與交流的能量場域。", gallery: ["https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880075/Sichuan2_bvn5ro.png", "https://res.cloudinary.com/dgc4hpm10/image/upload/v1774880063/Sichuan1_evqvxj.png"] }
     ];
 
     const experiencesData = [
-      { 
-        date: "2025", 
-        title: "亞太區優秀才能攝影競賽 第二名",
-        description: "透過對人文活動的表達 呈現對於視覺與氛圍的捕捉能力。"
-      },
-      { 
-        date: "2025", 
-        title: "特力屋家具杯 入圍",
-        description: "探討地域資源文化獲取評審青睞入圍。"
-      },
-      { 
-        date: "2024", 
-        title: "IDEERS國際抗震盃 耐震獎、效率比佳作、設計理念展示獎",
-        description: "善用棉繩阻尼的韌性消能系統，不僅在結構耐震上取得佳績，更在設計理念與效率比上獲得多項肯定。"
-      },
-      { 
-        date: "2023", 
-        title: "IDEERS國際抗震盃 耐震獎",
-        description: "首度參與抗震盃，以剛性結構防禦為基礎，結合材料力學與構造實作，成功獲得耐震獎項。"
-      },
-      { 
-        date: "2024", 
-        title: "日本福岡美術館參展",
-        description: "作品跨越國界，受邀於日本福岡美術館展出，與國際藝術及設計作品進行交流。"
-      },
-      { 
-        date: "2023", 
-        title: "全國大專院校運動會拳擊項目 第五名",
-        description: "身為運動員的堅持與毅力，在全國性體育賽事中取得佳績，並將這份韌性轉化為設計上的執行力。"
-      },
-      { 
-        date: "2023", 
-        title: "中建海峽兩岸交流杯 優秀獎",
-        description: "參與兩岸建築設計交流競賽，探討跨文化與地域性的空間議題，榮獲優秀獎肯定。"
-      },
-      { 
-        date: "2022", 
-        title: "校園LOGO設計競賽 佳作",
-        description: "運用視覺傳達設計技巧，為校園形象提出創新且具代表性的標誌設計。"
-      },
-      { 
-        date: "2021", 
-        title: "WAKO全國踢拳錦標賽 第二名",
-        description: "在嚴格的武術訓練與高壓競技中脫穎而出，鍛鍊出面對複雜挑戰時的強大抗壓性與團隊協作力。"
-      }
+      { date: "2025", title: "亞太區優秀才能攝影競賽 第二名", description: "透過對人文活動的表達 呈現對於視覺與氛圍的捕捉能力。" },
+      { date: "2025", title: "特力屋家具杯 入圍", description: "探討地域資源文化獲取評審青睞入圍。" },
+      { date: "2024", title: "IDEERS國際抗震盃 耐震獎、效率比佳作、設計理念展示獎", description: "善用棉繩阻尼的韌性消能系統，不僅在結構耐震上取得佳績，更在設計理念與效率比上獲得多項肯定。" },
+      { date: "2023", title: "IDEERS國際抗震盃 耐震獎", description: "首度參與抗震盃，以剛性結構防禦為基礎，結合材料力學與構造實作，成功獲得耐震獎項。" },
+      { date: "2024", title: "日本福岡美術館參展", description: "作品跨越國界，受邀於日本福岡美術館展出，與國際藝術及設計作品進行交流。" },
+      { date: "2023", title: "全國大專院校運動會拳擊項目 第五名", description: "身為運動員的堅持與毅力，在全國性體育賽事中取得佳績，並將這份韌性轉化為設計上的執行力。" },
+      { date: "2023", title: "中建海峽兩岸交流杯 優秀獎", description: "參與兩岸建築設計交流競賽，探討跨文化與地域性的空間議題，榮獲優秀獎肯定。" },
+      { date: "2022", title: "校園LOGO設計競賽 佳作", description: "運用視覺傳達設計技巧，為校園形象提出創新且具代表性的標誌設計。" },
+      { date: "2021", title: "WAKO全國踢拳錦標賽 第二名", description: "在嚴格的武術訓練與高壓競技中脫穎而出，鍛鍊出面對複雜挑戰時的強大抗壓性與團隊協作力。" }
     ];
 
-    // ----------------------------------------------------
-    // 2. 初始化與畫面渲染
-    // ----------------------------------------------------
-    
-    // 初始化 Lucide Icons
+    const themesData = {
+      theme1: {
+        title: "畢業展覽", subtitle: "重場域新譯",
+        description: "深入探討都市邊緣的縫合與重生。這裡展示了展覽現場的佈置、模型細節以及與觀展者的互動瞬間。",
+        gallery: [
+          "https://placehold.co/800x600/e2e8f0/64748b?text=Exhibition+1",
+          "https://placehold.co/800x500/cbd5e1/475569?text=Exhibition+2",
+          "https://placehold.co/800x1200/94a3b8/334155?text=Exhibition+3",
+          "https://placehold.co/800x700/64748b/1e293b?text=Exhibition+4"
+        ]
+      },
+      theme2: {
+        title: "攝影", subtitle: "捕捉人文與光影",
+        description: "透過鏡頭觀察世界的切面。從街頭的人流氛圍到建築的光影變化，每一張照片都是對空間與情感的感性紀錄。",
+        gallery: [
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778316467/175442_c2aspr.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778316467/175446_ynpgpy.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778316469/175444_oo4nmg.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778316466/175445_kri7un.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778316466/175447_of5xeu.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778316466/175443_bd83p5.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778316466/175448_gam12y.jpg"
+        ]
+      },
+      theme3: {
+        title: "競賽設計", subtitle: "結構與韌性的實踐",
+        description: "參與各項國內外建築與結構競賽的精華紀錄。包含抗震盃的消能系統設計、跨文化交流的空間提案等。",
+        gallery: [
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318809/3_cktsty.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318809/5_jseu2f.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318808/4_syeuiv.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318810/6_lyvtua.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318811/7_wzrq7j.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318812/8_u2qpb9.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318813/9_tg0ros.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318807/10_dyybi8.jpg",
+          "https://res.cloudinary.com/dgc4hpm10/image/upload/v1778318808/11_rmfpot.jpg"
+        ]
+      }
+    };
+
+    // --- 2. 畫面渲染 ---
     lucide.createIcons();
 
-    // 渲染作品集卡片
     const projectsContainer = document.getElementById('projects-container');
     projectsData.forEach((project, index) => {
-      // 判斷是否為第一個專案 (畢業設計)
       const isFeatured = index === 0;
-      
-      // 第一個專案橫跨兩格，其餘維持一格
-      const cardClasses = isFeatured 
-        ? "group block cursor-pointer project-card md:col-span-2" 
-        : "group block cursor-pointer project-card";
-      
-      // 第一個專案圖片比例較為寬廣
-      const imgAspectClass = isFeatured
-        ? ""
-        : "aspect-[4/3]";
-        
-      // 第一個專案標題放大
-      const titleClass = isFeatured
-        ? "text-2xl md:text-4xl font-medium tracking-wider mb-2 transition-transform duration-300 group-hover:translate-x-2 text-[#1A1A1A]"
-        : "text-xl font-medium tracking-wider mb-2 transition-transform duration-300 group-hover:translate-x-2 text-[#1A1A1A]";
-
-      const imgClasses = isFeatured
-        ? "pop-image w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-[1500ms] ease-out bg-gray-200 text-gray-400 text-sm"
-        : "pop-image object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-[1500ms] ease-out bg-gray-200 text-gray-400 text-sm";
+      const cardClasses = isFeatured ? "group block cursor-pointer project-card md:col-span-2" : "group block cursor-pointer project-card";
+      const imgAspectClass = isFeatured ? "" : "aspect-[4/3]";
+      const titleClass = isFeatured ? "text-2xl md:text-4xl font-medium tracking-wider mb-2 transition-transform duration-300 group-hover:translate-x-2 text-[#1A1A1A]" : "text-xl font-medium tracking-wider mb-2 transition-transform duration-300 group-hover:translate-x-2 text-[#1A1A1A]";
+      const imgClasses = isFeatured ? "pop-image w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-[1500ms] ease-out bg-gray-200 text-gray-400 text-sm" : "pop-image object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-[1500ms] ease-out bg-gray-200 text-gray-400 text-sm";
 
       projectsContainer.innerHTML += `
         <a href="#" class="${cardClasses}" onclick="openProjectModal(${project.id}); return false;">
@@ -509,25 +464,19 @@
       `;
     });
 
-    // 渲染經歷列表
     const experiencesContainer = document.getElementById('experiences-container');
     experiencesData.forEach((item, index) => {
-      // 這裡將原本的 hover: 與 group-hover: 改成 lg:hover: 與 lg:group-hover: 
-      // 確保 CSS 的懸停效果只在電腦版（帶有滑鼠的裝置）觸發，完美避開手機版「點擊後黏住顏色」的臭蟲
       experiencesContainer.innerHTML += `
         <div class="border-b border-gray-200">
-          <button id="btn-accordion-${index}" onclick="toggleAccordion(${index})" class="w-full text-left group py-6 md:py-8 px-6 lg:hover:bg-[#1A1A1A] lg:hover:text-white transition-all duration-500 cursor-pointer interactive-hover flex justify-between items-center">
-            <div id="content-inner-${index}" class="flex flex-col md:flex-row md:items-center gap-2 md:gap-16 transform transition-transform duration-500 lg:group-hover:translate-x-4 flex-1">
-              <span id="date-span-${index}" class="font-light tracking-widest text-gray-400 lg:group-hover:text-gray-300 transition-colors w-24">${item.date}</span>
+          <button id="btn-accordion-${index}" onclick="toggleAccordion(${index})" class="award-item-btn w-full text-left py-6 md:py-8 px-6 transition-all duration-500 cursor-pointer interactive-hover flex justify-between items-center">
+            <div id="content-inner-${index}" class="award-content flex flex-col md:flex-row md:items-center gap-2 md:gap-16 transform transition-transform duration-500 flex-1">
+              <span id="date-span-${index}" class="award-date font-light tracking-widest text-gray-400 transition-colors w-24">${item.date}</span>
               <h4 class="text-base md:text-lg font-light tracking-wider">${item.title}</h4>
             </div>
-            <div class="text-gray-400 lg:group-hover:text-white transition-transform duration-500 ml-4" id="icon-accordion-${index}">
-              <!-- 使用內聯 SVG 確保動態生成時能順利載入 -->
+            <div class="award-icon text-gray-400 transition-transform duration-500 ml-4" id="icon-accordion-${index}">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </div>
           </button>
-          
-          <!-- 隱藏的抽屜內容 -->
           <div id="content-accordion-${index}" class="overflow-hidden transition-[max-height] duration-700 ease-in-out" style="max-height: 0px;">
             <div class="px-6 pb-8 md:pl-[184px] pt-2 text-sm md:text-base font-light text-gray-500 tracking-wider leading-relaxed text-justify bg-[#F9F9F9]">
               ${item.description}
@@ -537,11 +486,7 @@
       `;
     });
 
-    // ----------------------------------------------------
-    // 3. 互動與動畫邏輯
-    // ----------------------------------------------------
-
-    // 圖片進入視窗淡入 (Intersection Observer)
+    // --- 3. 互動與動畫邏輯 ---
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -551,18 +496,15 @@
       });
     }, { threshold: 0.15 });
     
-    // 初始化觀察所有 .pop-image
     const observeImages = () => {
       document.querySelectorAll('.pop-image').forEach(img => observer.observe(img));
     };
     observeImages();
 
-    // 導覽列滾動變色
     const navbar = document.getElementById('navbar');
     const navTexts = document.querySelectorAll('.nav-text-color');
     let scrolled = false;
 
-    // 優化：加入狀態攔截，避免滑動時瘋狂觸發重新渲染
     window.addEventListener('scroll', () => {
       const isScrolled = window.scrollY > 50;
       if (scrolled !== isScrolled) {
@@ -573,7 +515,6 @@
 
     function updateNavStyle() {
       if (isMenuOpen) {
-        // 當選單打開時，導覽列背景保持透明，文字維持深色
         navbar.classList.add('bg-transparent', 'py-8');
         navbar.classList.remove('bg-white/90', 'backdrop-blur-md', 'py-4', 'shadow-sm');
         navTexts.forEach(el => { el.classList.remove('text-white'); el.classList.add('text-[#1A1A1A]'); });
@@ -588,7 +529,6 @@
       }
     }
 
-    // 手機版選單開關
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIcon = document.getElementById('menu-icon');
@@ -599,14 +539,12 @@
       isMenuOpen = !isMenuOpen;
       if (isMenuOpen) {
         mobileMenu.classList.add('is-open');
-        document.body.style.overflow = 'hidden'; // 鎖定背景滾動
-        // Icon 順滑變形：漢堡變 X
+        document.body.style.overflow = 'hidden';
         menuIcon.classList.add('opacity-0', 'scale-50', '-rotate-90');
         closeIcon.classList.remove('opacity-0', 'scale-50', 'rotate-90');
       } else {
         mobileMenu.classList.remove('is-open');
-        document.body.style.overflow = ''; // 解除鎖定
-        // Icon 順滑變形：X 變漢堡
+        document.body.style.overflow = '';
         menuIcon.classList.remove('opacity-0', 'scale-50', '-rotate-90');
         closeIcon.classList.add('opacity-0', 'scale-50', 'rotate-90');
       }
@@ -617,43 +555,33 @@
       link.addEventListener('click', () => {
         isMenuOpen = false;
         mobileMenu.classList.remove('is-open');
-        document.body.style.overflow = ''; // 解除鎖定
+        document.body.style.overflow = '';
         menuIcon.classList.remove('opacity-0', 'scale-50', '-rotate-90');
         closeIcon.classList.add('opacity-0', 'scale-50', 'rotate-90');
         updateNavStyle();
       });
     });
 
-    // 透鏡游標
     const cursor = document.getElementById('custom-cursor');
     let isCursorHovering = false;
 
     document.addEventListener('mousemove', (e) => {
+      if (window.innerWidth < 1369) return;
       const size = isCursorHovering ? 12 : 64;
       cursor.style.transform = `translate3d(${e.clientX - size / 2}px, ${e.clientY - size / 2}px, 0)`;
     });
 
     document.addEventListener('mouseover', (e) => {
+      if (window.innerWidth < 1369) return;
       if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.interactive-hover') || e.target.closest('.project-card')) {
         isCursorHovering = true;
-        cursor.style.width = '12px';
-        cursor.style.height = '12px';
-        cursor.style.border = 'none';
-        cursor.style.backgroundColor = '#1A1A1A';
-        cursor.style.backdropFilter = 'none';
-        cursor.style.boxShadow = 'none';
+        cursor.style.width = '12px'; cursor.style.height = '12px'; cursor.style.border = 'none'; cursor.style.backgroundColor = '#1A1A1A'; cursor.style.backdropFilter = 'none'; cursor.style.boxShadow = 'none';
       } else {
         isCursorHovering = false;
-        cursor.style.width = '64px';
-        cursor.style.height = '64px';
-        cursor.style.border = '1px solid rgba(0, 0, 0, 0.15)';
-        cursor.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-        cursor.style.backdropFilter = 'brightness(1.05) contrast(1.05)';
-        cursor.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 12px rgba(255,255,255,0.7), inset 0 0 4px rgba(255,255,255,0.9)';
+        cursor.style.width = '64px'; cursor.style.height = '64px'; cursor.style.border = '1px solid rgba(0, 0, 0, 0.15)'; cursor.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'; cursor.style.backdropFilter = 'brightness(1.05) contrast(1.05)'; cursor.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 12px rgba(255,255,255,0.7), inset 0 0 4px rgba(255,255,255,0.9)';
       }
     });
 
-    // 磁吸連結效果
     document.querySelectorAll('.magnetic-link').forEach(link => {
       link.addEventListener('mousemove', (e) => {
         const rect = link.getBoundingClientRect();
@@ -666,7 +594,6 @@
       });
     });
 
-    // 作品卡片視差效果
     document.querySelectorAll('.project-card').forEach(card => {
       const bg = card.querySelector('.parallax-bg');
       card.addEventListener('mousemove', (e) => {
@@ -680,7 +607,6 @@
       });
     });
 
-    // 折疊面板 (Accordion) 切換邏輯
     function toggleAccordion(index) {
       const content = document.getElementById(`content-accordion-${index}`);
       const icon = document.getElementById(`icon-accordion-${index}`);
@@ -689,42 +615,56 @@
       const dateSpan = document.getElementById(`date-span-${index}`);
       
       if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-        // 收起
-        content.style.maxHeight = '0px';
-        icon.style.transform = 'rotate(0deg)';
-        
-        // 移除固定黑色狀態，恢復原始顏色與排版
-        btn.classList.remove('bg-[#1A1A1A]', 'text-white');
-        innerContent.classList.remove('translate-x-4');
-        dateSpan.classList.remove('text-gray-300');
-        dateSpan.classList.add('text-gray-400');
-        icon.classList.remove('text-white');
-        icon.classList.add('text-gray-400');
-        
-        // 強制取消焦點，避免手機端瀏覽器保留虛擬懸停狀態 (Sticky Hover)
+        content.style.maxHeight = '0px'; icon.style.transform = 'rotate(0deg)';
+        btn.classList.remove('bg-[#1A1A1A]', 'text-white'); innerContent.classList.remove('translate-x-4'); dateSpan.classList.remove('text-gray-300'); dateSpan.classList.add('text-gray-400'); icon.classList.remove('text-white'); icon.classList.add('text-gray-400');
         btn.blur();
       } else {
-        // 展開：將 max-height 設定為實際內容高度
-        content.style.maxHeight = content.scrollHeight + 'px';
-        icon.style.transform = 'rotate(45deg)';
-        
-        // 鎖定為觸摸時的黑色狀態與位移效果
-        btn.classList.add('bg-[#1A1A1A]', 'text-white');
-        innerContent.classList.add('translate-x-4');
-        dateSpan.classList.remove('text-gray-400');
-        dateSpan.classList.add('text-gray-300');
-        icon.classList.remove('text-gray-400');
-        icon.classList.add('text-white');
+        content.style.maxHeight = content.scrollHeight + 'px'; icon.style.transform = 'rotate(45deg)';
+        btn.classList.add('bg-[#1A1A1A]', 'text-white'); innerContent.classList.add('translate-x-4'); dateSpan.classList.remove('text-gray-400'); dateSpan.classList.add('text-gray-300'); icon.classList.remove('text-gray-400'); icon.classList.add('text-white');
       }
     }
 
-    // ----------------------------------------------------
-    // 4. 彈出視窗 (Modal) 邏輯
-    // ----------------------------------------------------
+    // --- 4. 完美四邊對齊之動態間隔照片牆渲染器 ---
+    // 這個函式會透過分離左右欄、並使用 justify-between 來消化兩邊高度差，達成四邊完美切齊且不扭曲比例的最終目標。
+    function buildGalleryHTML(galleryList) {
+      if (!galleryList || galleryList.length === 0) return '';
+      
+      let leftCol = '';
+      let rightCol = '';
+      const pairsCount = Math.floor(galleryList.length / 2) * 2;
+      
+      // 將圖片依序交錯放入左右兩欄
+      for(let i=0; i < pairsCount; i++) {
+        const imgTag = `<img src="${galleryList[i]}" onerror="handleImgError(this)" class="pop-image w-full h-auto block" />`;
+        if (i % 2 === 0) leftCol += imgTag;
+        else rightCol += imgTag;
+      }
+      
+      // 使用 grid 強制左右兩欄同高，並在內部使用 flex-col justify-between
+      // 這會讓兩欄各自透過「圖片之間的間距(Gap)」來填滿高度差，保證最上與最下的邊界絕對切齊！
+      let html = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch w-full mb-12">
+          <div class="flex flex-col justify-between gap-8 h-full w-full">${leftCol}</div>
+          <div class="flex flex-col justify-between gap-8 h-full w-full">${rightCol}</div>
+        </div>
+      `;
+      
+      // 如果照片總數是奇數，最後一張獨立擺放於底部置中
+      if (galleryList.length % 2 !== 0) {
+        const lastImg = galleryList[galleryList.length - 1];
+        html += `
+          <div class="w-full flex justify-center mb-12">
+            <img src="${lastImg}" onerror="handleImgError(this)" class="pop-image w-full h-auto block" />
+          </div>
+        `;
+      }
+      return html;
+    }
+
+    // --- 5. 彈出視窗 (Modal) 邏輯 ---
     const modalOverlay = document.getElementById('modal-overlay');
     const modalContent = document.getElementById('modal-content');
 
-    // 處理隨意點擊關閉，同時防範誤觸
     function handleModalClick(e) {
       if (e.target.closest('button')) return;
       if (window.getSelection().toString().length > 0) return;
@@ -735,7 +675,6 @@
       modalOverlay.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
       modalOverlay.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
       document.body.style.overflow = 'hidden';
-      // 綁定新的圖片進行觀察 (讓 Modal 內的圖片也有淡入效果)
       setTimeout(observeImages, 100); 
     }
 
@@ -743,45 +682,55 @@
       modalOverlay.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
       modalOverlay.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
       document.body.style.overflow = 'auto';
-      setTimeout(() => { modalContent.innerHTML = ''; }, 500); // 動畫結束後清空內容
+      setTimeout(() => { modalContent.innerHTML = ''; }, 500);
     }
 
     function openMotivationModal() {
-      // 注入關於我的 HTML
       modalContent.innerHTML = `
         <div class="animate-fade-in-up">
           <h2 class="text-xs font-medium tracking-[0.4em] text-gray-400 mb-4 uppercase">Personal Statement</h2>
           <h3 class="text-4xl md:text-5xl font-light tracking-widest mb-16 text-[#1A1A1A]">關於我與轉學動機</h3>
-          
           <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
             <div class="bg-gray-200 aspect-[3/4] flex items-center justify-center">
-              <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1774879296/me2_cdngbp.jpg" onerror="handleImgError(this)" alt="[個人形象照預留區]" class="pop-image w-full h-full object-cover text-gray-400 text-sm" />
+              <img src="https://res.cloudinary.com/dgc4hpm10/image/upload/v1774879296/me2_cdngbp.jpg" onerror="handleImgError(this)" class="pop-image w-full h-full object-cover text-gray-400 text-sm" />
             </div>
-            
             <div class="space-y-6 text-gray-600 font-light leading-loose text-sm md:text-base tracking-wider text-justify">
-              
               <p class="text-xl text-black font-medium mb-8 leading-snug">「從感性觀察到理性構築，期許成為連結跨國營造實務的建築橋樑。」</p>
-              
               <div class="mb-8">
                 <h4 class="text-lg text-black font-medium mb-3 flex items-center gap-3"><span class="w-8 h-[1px] bg-black inline-block"></span>自我介紹</h4>
                 <p>我成長於單親家庭，擁有臺灣與泰國的雙文化背景，讓我習慣以多元視角觀察世界，並對環境與空間變化特別敏感。國中時期開始對空間產生興趣，從街道、公園到公共場館的動線與氛圍，都讓我意識到建築不只是形式與結構，更是影響人們生活與感受的重要媒介。</p>
-                <p class="mt-4">基於這樣的興趣，我選擇就讀華夏科技大學建築系五專部，期望將對空間的感性觀察轉化為理性設計能力。在學習過程中，我逐漸理解建築是結合設計思考、技術與社會觀察的綜合領域，也更加確立持續深耕建築的目標。</p>
               </div>
-
               <div class="mb-8">
                 <h4 class="text-lg text-black font-medium mb-3 flex items-center gap-3"><span class="w-8 h-[1px] bg-black inline-block"></span>在校求學經歷</h4>
-                <p>在華夏科技大學建築系五年期間，我除專注設計課程外，也透過競賽、實習與校外交流拓展學習經驗。競賽培養我在有限條件下發展構想並與團隊深化方案的能力；實習則讓我理解事務所運作與實務流程，強化對建築專業的整體認識。</p>
-                <p class="mt-4">在技能方面，我熟悉 AutoCAD、SketchUp、Revit 與 Photoshop，具備基礎設計發想、模型建構與圖面表達能力，並在多次課程與合作中，逐步建立整合設計邏輯與溝通協作的能力。</p>
+                <p>在華夏科技大學建築系五年期間，我除專注設計課程外，也透過競賽、實習與校外交流拓展學習經驗。在技能方面，我熟悉 AutoCAD、SketchUp、Revit 與 Photoshop，具備基礎設計發想、模型建構與圖面表達能力。</p>
               </div>
-
               <div class="mb-8">
                 <h4 class="text-lg text-black font-medium mb-3 flex items-center gap-3"><span class="w-8 h-[1px] bg-black inline-block"></span>未來規劃</h4>
-                <p>若有機會進入貴校就讀，我希望延續五專所累積的基礎，持續參與設計競圖與跨校交流，拓展設計視野，並結合泰語與英語優勢，從多元文化角度探討建築與社會的關係。</p>
-                <p class="mt-4">長遠而言，我規劃於完成學業與服役後前往泰國進修或就業，整合臺灣與泰國的建築與營造經驗，並在跨文化合作中發揮語言優勢，擔任溝通與整合的角色。期望以臺科大所培養的專業能力為基礎，在國際建築環境中持續發展。</p>
+                <p>若有機會進入貴校就讀，我希望延續五專所累積的基礎，並結合泰語與英語優勢，從多元文化角度探討建築與社會的關係。期望以臺科大所培養的專業能力為基礎，在國際建築環境中持續發展。</p>
               </div>
-
             </div>
           </div>
+        </div>
+      `;
+      openModal();
+    }
+
+    function openThemeModal(themeKey) {
+      const theme = themesData[themeKey];
+      if (!theme) return;
+      
+      const galleryHTML = buildGalleryHTML(theme.gallery);
+
+      modalContent.innerHTML = `
+        <div class="animate-fade-in-up">
+          <div class="max-w-4xl mx-auto text-center mb-16">
+            <h2 class="text-xs font-medium tracking-[0.4em] text-gray-400 mb-6 uppercase">${theme.title}</h2>
+            <h3 class="text-3xl md:text-5xl font-light tracking-widest mb-8 text-[#1A1A1A]">${theme.subtitle}</h3>
+            <p class="text-gray-600 font-light leading-loose text-sm md:text-base tracking-wider max-w-2xl mx-auto">
+              ${theme.description}
+            </p>
+          </div>
+          ${galleryHTML}
         </div>
       `;
       openModal();
@@ -791,19 +740,7 @@
       const p = projectsData.find(proj => proj.id === id);
       if(!p) return;
 
-      let galleryHTML = '';
-      if(p.gallery && p.gallery.length > 0) {
-        galleryHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-8">`;
-        p.gallery.forEach((imgSrc, idx) => {
-          const spanClass = p.gallery.length === 1 ? 'md:col-span-2' : '';
-          galleryHTML += `
-            <div class="bg-gray-200 flex items-center justify-center ${spanClass}">
-              <img src="${imgSrc || TRANSPARENT_PIXEL}" onerror="handleImgError(this)" alt="Gallery Image ${idx+1}" class="pop-image w-full h-auto object-contain text-gray-400 text-sm" />
-            </div>
-          `;
-        });
-        galleryHTML += `</div>`;
-      }
+      const galleryHTML = buildGalleryHTML(p.gallery);
 
       modalContent.innerHTML = `
         <div class="animate-fade-in-up">
@@ -814,7 +751,7 @@
             </div>
           </div>
           
-          <div class="w-full mb-16 bg-gray-200 flex items-center justify-center">
+          <div class="w-full mb-16">
             <img src="${p.img || TRANSPARENT_PIXEL}" onerror="handleImgError(this)" alt="${p.name} Main" class="pop-image w-full h-auto object-contain text-gray-400 text-sm" />
           </div>
           
@@ -837,7 +774,6 @@
               </p>
             </div>
           </div>
-
           ${galleryHTML}
         </div>
       `;
