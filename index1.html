@@ -639,6 +639,7 @@
       mobileHTML += '</div>';
 
       // 2. 電腦版：雙欄強迫齊行 (使用 hidden md:flex 隱藏在手機版)
+      // 將原本的 gap-8 統一，並移除影響垂直間距的 justify-between
       let desktopHTML = '<div class="hidden md:flex flex-row gap-8 w-full mb-12">';
       
       let leftCol = [];
@@ -656,22 +657,22 @@
         }
       });
 
-      // 左欄 (flex-col 與 justify-between 確保上下貼齊並動態調整間距)
-      desktopHTML += '<div class="flex-1 flex flex-col justify-between">';
+      // 左欄 (改用 gap-8 控制上下間距，與左右的 gap-8 一致)
+      desktopHTML += '<div class="flex-1 flex flex-col gap-8">';
       leftCol.forEach(imgSrc => {
         desktopHTML += `
-          <div class="w-full flex-grow flex items-center justify-center">
+          <div class="w-full flex items-center justify-center">
             <img src="${imgSrc}" onerror="handleImgError(this)" class="pop-image w-full h-auto object-contain" />
           </div>
         `;
       });
       desktopHTML += '</div>';
 
-      // 右欄 (flex-col 與 justify-between 確保上下貼齊並動態調整間距)
-      desktopHTML += '<div class="flex-1 flex flex-col justify-between">';
+      // 右欄 (改用 gap-8 控制上下間距，與左右的 gap-8 一致)
+      desktopHTML += '<div class="flex-1 flex flex-col gap-8">';
       rightCol.forEach(imgSrc => {
         desktopHTML += `
-          <div class="w-full flex-grow flex items-center justify-center">
+          <div class="w-full flex items-center justify-center">
             <img src="${imgSrc}" onerror="handleImgError(this)" class="pop-image w-full h-auto object-contain" />
           </div>
         `;
